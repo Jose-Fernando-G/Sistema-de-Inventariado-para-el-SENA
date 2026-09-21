@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Gestión de Ambientes</title>
+</head>
+
+<body class="bg-slate-50 min-h-screen text-slate-800">
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <!-- COLUMNA IZQUIERDA: Perfil del Docente -->
+            <div class="lg:col-span-3">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 text-center sticky top-6">
+
+                    <!-- Avatar e Icono de edición -->
+                    <div class="mb-4">
+                        <div class="relative inline-flex p-5 rounded-full bg-slate-100 text-[#6cba42]">
+                            <i class="fa-solid fa-user-tie text-4xl"></i>
+                            <a href="#"
+                                class="absolute bottom-0 right-0 bg-[#6cba42] hover:bg-[#5aa334] text-white rounded-full w-8 h-8 flex items-center justify-center shadow-md transition duration-200"
+                                title="Editar Perfil">
+                                <i class="fa-solid fa-pen text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <h5 class="font-bold text-slate-800 text-lg mb-1">
+                        ¡Bienvenido instructor!
+                    </h5>
+                    <p class="text-slate-500 text-xs">
+                        Instructor Sede Villeta
+                    </p>
+
+                    <hr class="my-4 border-slate-200">
+
+                    <!-- Detalles del perfil -->
+                    <div class="text-left text-xs space-y-3 text-slate-700">
+                        <div>
+                            <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Correo
+                                Electrónico</span>
+                            <span class="font-medium text-slate-800 text-sm break-all">instructorsena@gmail.com</span>
+                        </div>
+
+                        <div>
+                            <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Programa a
+                                cargo</span>
+                            <span class="font-medium text-slate-800 text-sm">Tecnólogo en Análisis y Desarrollo de
+                                Software</span>
+                        </div>
+
+                        <div>
+                            <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Ambiente
+                                Asignado</span>
+                            <span class="font-medium text-slate-800 text-sm">Aula 107</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: Control de Ambientes (Check-in / Check-out) -->
+            <div class="lg:col-span-9 space-y-6">
+
+                <!-- Banner de Bienvenida -->
+                <div
+                    class="bg-[#6cba42] text-white p-6 rounded-2xl shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-1">¡Bienvenido/a de nuevo!</h3>
+                        <p class="text-white/90 text-sm">Gestiona la apertura, verificación del inventario y cierre de
+                            tu ambiente de formación.</p>
+                    </div>
+                    <span
+                        class="bg-white/20 text-white text-xs px-3 py-1.5 rounded-full font-semibold whitespace-nowrap">
+                        <i class="fa-solid fa-clock mr-1"></i> Estado: Sin Apertura
+                    </span>
+                </div>
+
+                <!-- 1. VISTA: APERTURA / RECIBIMIENTO DE AMBIENTE (Check-in) -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-6">
+                    <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-[#6cba42]/10 text-[#6cba42] flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-key"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-lg">Apertura / Recibimiento de Ambiente</h4>
+                            <p class="text-slate-500 text-xs">Seleccione la información del salón antes de iniciar su
+                                jornada</p>
+                        </div>
+                    </div>
+
+                    <!-- Seleccionables de Ambiente y Ficha -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Seleccionar
+                                Ambiente</label>
+                            <select
+                                class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#6cba42]">
+                                <option value="">-- Seleccionar Ambiente --</option>
+                                <option value="204" selected>Ambiente 204 - Laboratorio Sistemas</option>
+                                <option value="107">Aula 107 - Redes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Seleccionar Ficha y
+                                Jornada</label>
+                            <select
+                                class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#6cba42]">
+                                <option value="">-- Seleccionar Ficha --</option>
+                                <option value="2558910" selected>2558910 - ADSO (Jornada Mañana)</option>
+                                <option value="2670123">2670123 - Redes (Jornada Tarde)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Resumen de Inventario Asignado -->
+<!-- Resumen de Inventario Asignado (Tarjetas Interactivas Completas) -->
+<div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+    <h5 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center justify-between">
+        <span class="flex items-center gap-2">
+            <i class="fa-solid fa-boxes-stacked text-[#6cba42]"></i> Resumen de Inventario Asignado
+        </span>
+        <span class="text-[11px] text-slate-400 font-normal hidden sm:inline">Haz clic en un elemento para ver sus placas</span>
+    </h5>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+        
+        <!-- 1. Computadores -->
+        <a href="detalle-inventario.html?categoria=computadores" class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200 hover:border-[#6cba42] hover:shadow-md transition group">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-desktop text-slate-400 group-hover:text-[#6cba42] text-lg transition"></i>
+                <div>
+                    <span class="font-semibold block text-slate-800">25 Computadores HP</span>
+                    <span class="text-xs text-emerald-600 font-medium">25 Operativos</span>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-[#6cba42] text-xs transition"></i>
+        </a>
+
+        <!-- 2. Proyector -->
+        <a href="detalle-inventario.html?categoria=proyector" class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200 hover:border-[#6cba42] hover:shadow-md transition group">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-video text-slate-400 group-hover:text-[#6cba42] text-lg transition"></i>
+                <div>
+                    <span class="font-semibold block text-slate-800">1 Proyector Epson</span>
+                    <span class="text-xs text-emerald-600 font-medium">Operativo</span>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-[#6cba42] text-xs transition"></i>
+        </a>
+
+        <!-- 3. Sillas -->
+        <a href="detalle-inventario.html?categoria=sillas" class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200 hover:border-[#6cba42] hover:shadow-md transition group">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-chair text-slate-400 group-hover:text-[#6cba42] text-lg transition"></i>
+                <div>
+                    <span class="font-semibold block text-slate-800">25 Sillas Ergonómicas</span>
+                    <span class="text-xs text-slate-500">Buen estado</span>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-[#6cba42] text-xs transition"></i>
+        </a>
+
+        <!-- 4. Mesas de Trabajo -->
+        <a href="detalle-inventario.html?categoria=mesas" class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200 hover:border-[#6cba42] hover:shadow-md transition group">
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-slate-400 group-hover:text-[#6cba42] transition fill-current" viewBox="0 0 24 24">
+                    <path d="M2 6a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6zm2 3v9a1 1 0 0 0 2 0V9H4zm14 0v9a1 1 0 0 0 2 0V9h-2z"/>
+                </svg>
+                <div>
+                    <span class="font-semibold block text-slate-800">13 Mesas de Trabajo</span>
+                    <span class="text-xs text-emerald-600 font-medium">13 Operativas</span>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-[#6cba42] text-xs transition"></i>
+        </a>
+
+        <!-- 5. Teclados -->
+        <a href="detalle-inventario.html?categoria=teclados" class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200 hover:border-[#6cba42] hover:shadow-md transition group">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-keyboard text-slate-400 group-hover:text-[#6cba42] text-lg transition"></i>
+                <div>
+                    <span class="font-semibold block text-slate-800">25 Teclados USB</span>
+                    <span class="text-xs text-emerald-600 font-medium">25 Operativos</span>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-[#6cba42] text-xs transition"></i>
+        </a>
+
+        <!-- 6. Mouses -->
+        <a href="detalle-inventario.html?categoria=mouses" class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200 hover:border-[#6cba42] hover:shadow-md transition group">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-computer-mouse text-slate-400 group-hover:text-[#6cba42] text-lg transition"></i>
+                <div>
+                    <span class="font-semibold block text-slate-800">25 Mouses Ópticos</span>
+                    <span class="text-xs text-emerald-600 font-medium">25 Operativos</span>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-[#6cba42] text-xs transition"></i>
+        </a>
+
+    </div>
+</div>
+                    <!-- Acciones de Entrada -->
+                    <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                        <button
+                            class="flex-1 bg-[#6cba42] hover:bg-[#5aa334] text-white font-semibold py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center gap-2 text-sm shadow-sm">
+                            <i class="fa-solid fa-circle-check"></i> Ingresar Sin Novedad
+                        </button>
+                        <button onclick="document.getElementById('modalNovedad').classList.remove('hidden')"
+                            class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center gap-2 text-sm shadow-sm">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Reportar Novedad Ingreso
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. VISTA: CIERRE / ENTREGA DE AMBIENTE (Check-out) -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-6">
+                    <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-door-closed"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-lg">Cierre / Check-out de Ambiente</h4>
+                            <p class="text-slate-500 text-xs">Lista de verificación para la entrega del salón al
+                                finalizar la formación</p>
+                        </div>
+                    </div>
+
+                    <!-- Lista de verificación rápida -->
+                    <div class="space-y-3">
+                        <label class="block text-xs font-bold text-slate-700 uppercase">Checklist de Salida</label>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <label
+                                class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+                                <input type="checkbox" class="w-4 h-4 text-[#6cba42] rounded focus:ring-[#6cba42]">
+                                <span class="text-sm text-slate-700">Equipos de cómputo apagados</span>
+                            </label>
+
+                            <label
+                                class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+                                <input type="checkbox" class="w-4 h-4 text-[#6cba42] rounded focus:ring-[#6cba42]">
+                                <span class="text-sm text-slate-700">Video Proyector apagado</span>
+                            </label>
+
+                            <label
+                                class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+                                <input type="checkbox" class="w-4 h-4 text-[#6cba42] rounded focus:ring-[#6cba42]">
+                                <span class="text-sm text-slate-700">Sillas y mesas organizadas</span>
+                            </label>
+
+                            <label
+                                class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+                                <input type="checkbox" class="w-4 h-4 text-[#6cba42] rounded focus:ring-[#6cba42]">
+                                <span class="text-sm text-slate-700">Luces y aire acondicionado apagados</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Botón Cierre -->
+                    <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                        <button onclick="document.getElementById('modalNovedad').classList.remove('hidden')"
+                            class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center gap-2 text-sm">
+                            <i class="fa-solid fa-camera"></i> Declarar Novedad de Salida
+                        </button>
+                        <button
+                            class="flex-1 bg-slate-800 hover:bg-slate-900 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center gap-2 text-sm shadow-sm">
+                            <i class="fa-solid fa-lock"></i> Finalizar y Cerrar Ambiente
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODAL EMERGENTE: REGISTRO DE NOVEDADES (Daños, Elementos Faltantes, etc.) -->
+    <div id="modalNovedad"
+        class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 space-y-5">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Reportar Novedad de Ambiente
+                </h3>
+                <button onclick="document.getElementById('modalNovedad').classList.add('hidden')"
+                    class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tipo de Novedad</label>
+                    <select
+                        class="w-full px-4 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#6cba42]">
+                        <option value="dano">Daño en Equipos / Estructura</option>
+                        <option value="faltante">Elemento Faltante</option>
+                        <option value="sin_placa">Elemento Sin Placa de Inventario</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Descripción detallada</label>
+                    <textarea rows="3" placeholder="Escriba los detalles de la novedad observada..."
+                        class="w-full px-4 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#6cba42]"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Foto de Evidencia</label>
+                    <div
+                        class="border-2 border-dashed border-slate-300 rounded-xl p-4 text-center hover:bg-slate-50 cursor-pointer">
+                        <input type="file" accept="image/*" capture="environment" class="hidden" id="fotoEvidencia">
+                        <label for="fotoEvidencia" class="cursor-pointer space-y-1 block">
+                            <i class="fa-solid fa-camera text-2xl text-slate-400"></i>
+                            <span class="block text-xs text-slate-600 font-medium">Haga clic para tomar foto o adjuntar
+                                archivo</span>
+                            <span class="block text-[10px] text-slate-400">Formatos permitidos: JPG, PNG</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 pt-3">
+                    <button type="button" onclick="document.getElementById('modalNovedad').classList.add('hidden')"
+                        class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-xl text-sm">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                        class="flex-1 bg-[#6cba42] hover:bg-[#5aa334] text-white font-semibold py-2.5 rounded-xl text-sm shadow-sm">
+                        Guardar Novedad
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

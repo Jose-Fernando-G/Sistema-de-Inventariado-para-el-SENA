@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Detalle de Placas - Inventario</title>
+</head>
+
+<body class="bg-slate-50 min-h-screen text-slate-800">
+    <main class="max-w-6xl mx-auto px-4 py-6 w-full space-y-6">
+
+        <!-- Barra superior de navegación -->
+        <div class="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="flex items-center gap-3">
+                <a href="dashboard.html"
+                    class="bg-slate-100 hover:bg-slate-200 text-slate-700 w-10 h-10 rounded-xl flex items-center justify-center transition"
+                    title="Volver al Dashboard">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <div>
+                    <h3 id="tituloCategoria" class="font-bold text-slate-800 text-lg">Cargando inventario...</h3>
+                    <p class="text-xs text-slate-500">Ambiente 204 - Laboratorio Sistemas</p>
+                </div>
+            </div>
+
+            <span id="badgeTotal" class="bg-[#6cba42]/10 text-[#6cba42] font-semibold text-xs px-3 py-1.5 rounded-full">
+                Total: 0 Elementos
+            </span>
+        </div>
+
+        <!-- Buscador y Filtros -->
+        <div
+            class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
+            <div class="relative w-full md:w-80">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-sm"></i>
+                <input type="text" id="inputBuscador" placeholder="Buscar por N° de placa o nombre..."
+                    class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#6cba42]">
+            </div>
+
+            <div class="flex gap-2 w-full md:w-auto">
+                <button id="btnFiltrarEstado"
+                    class="flex-1 md:flex-initial bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-4 py-2.5 rounded-xl transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-filter"></i> <span>Todos los estados</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabla con el desglose dinámico -->
+        <div id="contenedorVista" class="space-y-3">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead
+                        class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                        <tr>
+                            <th class="p-4">Item</th>
+                            <th class="p-4">N° de Placa SENA</th>
+                            <th class="p-4">Elemento / Modelo</th>
+                            <th class="p-4">Estado Actual</th>
+                            <th class="p-4 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaCuerpo" class="divide-y divide-slate-100 text-slate-700">
+                        <!-- Las filas se insertarán dinámicamente con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- SCRIPT JAVASCRIPT DINÁMICO -->
+    <script>
+        // 1. BASE DE DATOS SIMULADA SEGÚN CATEGORÍA
+        const inventarios = {
+            computadores: {
+                nombre: "Computadores HP",
+                items: Array.from({ length: 25 }, (_, i) => ({
+                    item: `#${String(i + 1).padStart(2, '0')}`,
+                    placa: `SENA-COMP-${202401 + i}`,
+                    modelo: "Computador All-in-One HP ProOne 440 G6",
+                    operativo: i !== 2, // Simulamos novedad en el #3
+                    detalleNovedad: i === 2 ? "Pantalla parpadea" : ""
+                }))
+            },
+            proyector: {
+                nombre: "Proyectores Epson",
+                items: [
+                    { item: "#01", placa: "SENA-PROY-99201", modelo: "Video Proyector Epson PowerLite 119W", operativo: true, detalleNovedad: "" }
+                ]
+            },
+            sillas: {
+                nombre: "Sillas Ergonómicas",
+                items: Array.from({ length: 25 }, (_, i) => ({
+                    item: `#${String(i + 1).padStart(2, '0')}`,
+                    placa: `SENA-SIL-${202401 + i}`,
+                    modelo: "Silla Ergonómica Ejecutiva Malla Negra",
+                    operativo: i !== 4, // Simulamos novedad en la #5
+                    detalleNovedad: i === 4 ? "Rueda izquierda rota" : ""
+                }))
+            },
+            mesas: {
+                nombre: "Mesas de Trabajo",
+                items: Array.from({ length: 13 }, (_, i) => ({
+                    item: `#${String(i + 1).padStart(2, '0')}`,
+                    placa: `SENA-MES-${202401 + i}`,
+                    modelo: "Mesa Modular Estructura Metálica",
+                    operativo: true,
+                    detalleNovedad: ""
+                }))
+            },
+            teclados: {
+                nombre: "Teclados USB",
+                items: Array.from({ length: 25 }, (_, i) => ({
+                    item: `#${String(i + 1).padStart(2, '0')}`,
+                    placa: `SENA-TEC-${202401 + i}`,
+                    modelo: "Teclado USB HP K1500",
+                    operativo: true,
+                    detalleNovedad: ""
+                }))
+            },
+            mouses: {
+                nombre: "Mouses Ópticos",
+                items: Array.from({ length: 25 }, (_, i) => ({
+                    item: `#${String(i + 1).padStart(2, '0')}`,
+                    placa: `SENA-MOU-${202401 + i}`,
+                    modelo: "Mouse Óptico USB HP",
+                    operativo: true,
+                    detalleNovedad: ""
+                }))
+            }
+        };
+
+        let itemsActuales = [];
+
+        // 2. OBTENER EL PARÁMETRO 'categoria' DE LA URL
+        function obtenerCategoriaURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('categoria') || 'sillas'; // 'sillas' por defecto si no hay parámetro
+        }
+
+        // 3. RENDERIZAR INVENTARIO (Tarjeta para móviles / Tabla para escritorio)
+        function renderizarTabla(items) {
+            const contenedor = document.getElementById('contenedorVista');
+            contenedor.innerHTML = '';
+
+            if (items.length === 0) {
+                contenedor.innerHTML = `
+            <div class="bg-white rounded-2xl p-8 text-center text-slate-400 border border-slate-200">
+                <i class="fa-solid fa-folder-open text-3xl mb-2 block"></i>
+                No se encontraron elementos con ese criterio de búsqueda.
+            </div>
+        `;
+                return;
+            }
+
+            // ----------------------------------------------------
+            // VISTA MÓVIL: Layout de Tarjetas (Se muestra en < 768px)
+            // ----------------------------------------------------
+            const vistaMobile = document.createElement('div');
+            vistaMobile.className = 'grid grid-cols-1 gap-3 md:hidden';
+
+            items.forEach(el => {
+                const tarjeta = document.createElement('div');
+                tarjeta.className = `bg-white p-4 rounded-2xl border shadow-sm space-y-3 ${!el.operativo ? 'border-red-200 bg-red-50/20' : 'border-slate-200'
+                    }`;
+
+                tarjeta.innerHTML = `
+            <!-- Encabezado de la Tarjeta: Placa y Estado -->
+            <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-slate-400">${el.item}</span>
+                    <span class="font-mono font-bold text-xs bg-slate-100 px-2 py-1 rounded border border-slate-200 text-slate-800">
+                        ${el.placa}
+                    </span>
+                </div>
+                ${el.operativo
+                        ? `<span class="bg-emerald-100 text-emerald-700 text-[11px] px-2.5 py-0.5 rounded-full font-medium inline-flex items-center gap-1">
+                        <i class="fa-solid fa-circle-check text-[9px]"></i> Operativo
+                       </span>`
+                        : `<span class="bg-red-100 text-red-700 text-[11px] px-2.5 py-0.5 rounded-full font-medium inline-flex items-center gap-1">
+                        <i class="fa-solid fa-circle-xmark text-[9px]"></i> Novedad
+                       </span>`
+                    }
+            </div>
+
+            <!-- Información del elemento -->
+            <div>
+                <p class="text-sm font-semibold text-slate-800">${el.modelo}</p>
+                ${!el.operativo ? `<p class="text-xs text-red-600 mt-1 font-medium"><i class="fa-solid fa-triangle-exclamation mr-1"></i> ${el.detalleNovedad}</p>` : ''}
+            </div>
+
+            <!-- Botón de acción touch (100% de ancho) -->
+            <div>
+                ${el.operativo
+                        ? `<button class="w-full bg-amber-50 hover:bg-amber-100 text-amber-600 font-semibold py-2.5 px-4 rounded-xl text-xs transition flex items-center justify-center gap-2 border border-amber-200/60 active:scale-[0.98]">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Reportar Novedad
+                       </button>`
+                        : `<button class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 px-4 rounded-xl text-xs transition flex items-center justify-center gap-2 active:scale-[0.98]">
+                        <i class="fa-solid fa-eye"></i> Ver Detalle Novedad
+                       </button>`
+                    }
+            </div>
+        `;
+                vistaMobile.appendChild(tarjeta);
+            });
+
+            // ----------------------------------------------------
+            // VISTA ESCRITORIO: Tabla tradicional (Se muestra en >= 768px)
+            // ----------------------------------------------------
+            const vistaDesktop = document.createElement('div');
+            vistaDesktop.className = 'hidden md:block bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden';
+
+            let htmlTabla = `
+        <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <tr>
+                    <th class="p-4">Item</th>
+                    <th class="p-4">N° de Placa SENA</th>
+                    <th class="p-4">Elemento / Modelo</th>
+                    <th class="p-4">Estado Actual</th>
+                    <th class="p-4 text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-700">
+    `;
+
+            items.forEach(el => {
+                htmlTabla += `
+            <tr class="hover:bg-slate-50/80 transition ${!el.operativo ? 'bg-red-50/30' : ''}">
+                <td class="p-4 font-semibold text-slate-400">${el.item}</td>
+                <td class="p-4 font-mono font-bold text-slate-800">
+                    <span class="bg-slate-100 px-2 py-1 rounded border border-slate-200">${el.placa}</span>
+                </td>
+                <td class="p-4">${el.modelo}</td>
+                <td class="p-4">
+                    ${el.operativo
+                        ? `<span class="bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-full font-medium inline-flex items-center gap-1">
+                            <i class="fa-solid fa-circle-check text-[10px]"></i> Operativo
+                           </span>`
+                        : `<span class="bg-red-100 text-red-700 text-xs px-2.5 py-1 rounded-full font-medium inline-flex items-center gap-1">
+                            <i class="fa-solid fa-circle-xmark text-[10px]"></i> Con Novedad (${el.detalleNovedad})
+                           </span>`
+                    }
+                </td>
+                <td class="p-4 text-center">
+                    ${el.operativo
+                        ? `<button class="text-amber-500 hover:text-amber-600 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-lg text-xs font-medium transition inline-flex items-center gap-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Reportar Novedad
+                           </button>`
+                        : `<button class="text-slate-600 hover:text-slate-800 bg-slate-100 px-3 py-1.5 rounded-lg text-xs font-medium transition inline-flex items-center gap-1">
+                            <i class="fa-solid fa-eye"></i> Ver Novedad
+                           </button>`
+                    }
+                </td>
+            </tr>
+        `;
+            });
+
+            htmlTabla += `
+            </tbody>
+        </table>
+    `;
+
+            vistaDesktop.innerHTML = htmlTabla;
+
+            // Agregar ambas vistas al DOM
+            contenedor.appendChild(vistaMobile);
+            contenedor.appendChild(vistaDesktop);
+        }
+
+        // 4. INICIALIZACIÓN
+        document.addEventListener('DOMContentLoaded', () => {
+            const cat = obtenerCategoriaURL();
+            const dataCategoria = inventarios[cat] || inventarios['sillas'];
+
+            // Actualizar encabezados
+            document.getElementById('tituloCategoria').innerText = `Listado de ${dataCategoria.nombre}`;
+            document.getElementById('badgeTotal').innerText = `Total: ${dataCategoria.items.length} Elementos`;
+
+            itemsActuales = dataCategoria.items;
+            renderizarTabla(itemsActuales);
+
+            // Buscador dinámico en tiempo real
+            document.getElementById('inputBuscador').addEventListener('input', (e) => {
+                const busqueda = e.target.value.toLowerCase();
+                const filtrados = itemsActuales.filter(item =>
+                    item.placa.toLowerCase().includes(busqueda) ||
+                    item.modelo.toLowerCase().includes(busqueda)
+                );
+                renderizarTabla(filtrados);
+            });
+        });
+    </script>
+</body>
+
+</html>
