@@ -1,0 +1,13 @@
+:root {
+  /* Colores Principales */
+  --sena-verde-brand: #39A900;     /* Verde Institucional / Logosímbolo */
+  --sena-naranja: #FDC300;         /* Naranja / Amarillo Institucional */
+  --sena-verde-oscuro: #007832;    /* Verde Oscuro / Textos destacados / Encabezados */
+  --sena-azul-oscuro: #00304D;     /* Azul Oscuro / Headers, Navbars, Footers */
+
+  /* Colores Neutros y Legibilidad */
+  --sena-blanco: #FFFFFF;          /* Fondos de tarjetas, modales y contenedores */
+  --sena-fondo-gris: #F4F6F8;      /* Fondo general de la aplicación (suave a la vista) */
+  --sena-texto-principal: #2F2F2F; /* Texto extenso y cuerpo de tablas (alta legibilidad) */
+  --sena-negro: #000000;
+}

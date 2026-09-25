@@ -5,294 +5,340 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Estilos globales y configuración de variables SENA -->
+    <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Detalle de Placas - Inventario</title>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sena-verde': 'var(--sena-verde-brand)',
+                        'sena-naranja': 'var(--sena-naranja)',
+                        'sena-verde-oscuro': 'var(--sena-verde-oscuro)',
+                        'sena-azul': 'var(--sena-azul-oscuro)',
+                        'sena-blanco': 'var(--sena-blanco)',
+                        'sena-gris': 'var(--sena-fondo-gris)',
+                        'sena-texto': 'var(--sena-texto-principal)',
+                    }
+                }
+            }
+        }
+    </script>
+    <title>Tablero de Novedades - Almacén SENA</title>
 </head>
 
-<body class="bg-slate-50 min-h-screen text-slate-800">
-    <main class="max-w-6xl mx-auto px-4 py-6 w-full space-y-6">
+<body class="bg-sena-gris min-h-screen text-sena-texto">
+    <main class="max-w-7xl mx-auto px-4 py-6 w-full space-y-6">
 
-        <!-- Barra superior de navegación -->
-        <div class="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <!-- Header / Barra Superior -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between bg-sena-blanco p-5 rounded-2xl border border-slate-200 shadow-sm gap-4">
             <div class="flex items-center gap-3">
                 <a href="dashboard.html"
-                    class="bg-slate-100 hover:bg-slate-200 text-slate-700 w-10 h-10 rounded-xl flex items-center justify-center transition"
+                    class="bg-sena-gris hover:bg-sena-verde/10 hover:text-sena-verde text-slate-700 w-10 h-10 rounded-xl flex items-center justify-center transition"
                     title="Volver al Dashboard">
                     <i class="fa-solid fa-arrow-left"></i>
                 </a>
                 <div>
-                    <h3 id="tituloCategoria" class="font-bold text-slate-800 text-lg">Cargando inventario...</h3>
-                    <p class="text-xs text-slate-500">Ambiente 204 - Laboratorio Sistemas</p>
+                    <h3 class="font-bold text-sena-azul text-xl flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-sena-verde"></i> Tablero de Gestión de Novedades
+                    </h3>
+                    <p class="text-xs text-slate-500">Control y seguimiento de daños, faltantes y elementos rotulados</p>
                 </div>
             </div>
 
-            <span id="badgeTotal" class="bg-[#6cba42]/10 text-[#6cba42] font-semibold text-xs px-3 py-1.5 rounded-full">
-                Total: 0 Elementos
-            </span>
+            <!-- Contadores de Estado -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
+                <span class="bg-amber-50 text-amber-700 border border-amber-200 text-xs px-3 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 whitespace-nowrap">
+                    <span class="w-2 h-2 rounded-full bg-amber-500"></span> 3 Pendientes
+                </span>
+                <span class="bg-blue-50 text-blue-700 border border-blue-200 text-xs px-3 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 whitespace-nowrap">
+                    <span class="w-2 h-2 rounded-full bg-blue-500"></span> 2 En Revisión
+                </span>
+                <span class="bg-sena-verde/10 text-sena-verde-oscuro border border-sena-verde/20 text-xs px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 whitespace-nowrap">
+                    <span class="w-2 h-2 rounded-full bg-sena-verde"></span> 12 Resueltas
+                </span>
+            </div>
         </div>
 
         <!-- Buscador y Filtros -->
-        <div
-            class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
-            <div class="relative w-full md:w-80">
+        <div class="bg-sena-blanco p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 justify-between items-center">
+            <div class="relative w-full md:w-96">
                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-sm"></i>
-                <input type="text" id="inputBuscador" placeholder="Buscar por N° de placa o nombre..."
-                    class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#6cba42]">
+                <input type="text" placeholder="Buscar por placa, ambiente o reporte..."
+                    class="w-full pl-9 pr-4 py-2 bg-sena-gris border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sena-verde focus:border-sena-verde transition">
             </div>
 
-            <div class="flex gap-2 w-full md:w-auto">
-                <button id="btnFiltrarEstado"
-                    class="flex-1 md:flex-initial bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-4 py-2.5 rounded-xl transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-filter"></i> <span>Todos los estados</span>
-                </button>
+            <div class="flex flex-wrap md:flex-nowrap gap-2 w-full md:w-auto">
+                <select class="px-3 py-2 bg-sena-gris border border-slate-200 rounded-xl text-xs font-semibold text-sena-texto focus:outline-none focus:ring-2 focus:ring-sena-verde w-full md:w-auto">
+                    <option value="">Todos los Tipos</option>
+                    <option value="dano">Daño en Equipos</option>
+                    <option value="faltante">Elemento Faltante</option>
+                    <option value="sin_placa">Sin Placa SENA</option>
+                </select>
+
+                <select class="px-3 py-2 bg-sena-gris border border-slate-200 rounded-xl text-xs font-semibold text-sena-texto focus:outline-none focus:ring-2 focus:ring-sena-verde w-full md:w-auto">
+                    <option value="">Todos los Ambientes</option>
+                    <option value="204">Ambiente 204 - Sistemas</option>
+                    <option value="107">Aula 107 - Redes</option>
+                </select>
             </div>
         </div>
 
-        <!-- Tabla con el desglose dinámico -->
-        <div id="contenedorVista" class="space-y-3">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm">
-                    <thead
-                        class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
-                        <tr>
-                            <th class="p-4">Item</th>
-                            <th class="p-4">N° de Placa SENA</th>
-                            <th class="p-4">Elemento / Modelo</th>
-                            <th class="p-4">Estado Actual</th>
-                            <th class="p-4 text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tablaCuerpo" class="divide-y divide-slate-100 text-slate-700">
-                        <!-- Las filas se insertarán dinámicamente con JavaScript -->
-                    </tbody>
-                </table>
+        <!-- Tablero Kanban / Grilla de 3 Columnas por Estado -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- COLUMNA 1: PENDIENTES -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between bg-amber-500/10 p-3 rounded-xl border border-amber-200">
+                    <span class="font-bold text-amber-800 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-clock"></i> Pendientes de Atención
+                    </span>
+                    <span class="bg-amber-500 text-white text-xs font-bold px-2.5 py-0.5 rounded-full">3</span>
+                </div>
+
+                <!-- Tarjeta Novedad 1 -->
+                <div class="bg-sena-blanco p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3 hover:border-amber-400 transition">
+                    <div class="flex justify-between items-start">
+                        <span class="bg-red-100 text-red-700 text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Daño en Equipos
+                        </span>
+                        <span class="text-[10px] font-medium text-slate-400">Hace 2 horas</span>
+                    </div>
+
+                    <div>
+                        <h5 class="font-bold text-sena-texto text-sm">Computador HP All-in-One</h5>
+                        <p class="text-xs font-mono text-slate-500 mt-0.5">Placa: <span class="bg-sena-gris px-1.5 py-0.5 rounded border border-slate-200 font-bold text-sena-texto">SENA-COMP-202403</span></p>
+                    </div>
+
+                    <p class="text-xs text-slate-600 line-clamp-2 bg-sena-gris p-2.5 rounded-lg border border-slate-100">
+                        "La pantalla parpadea constantemente al encender y se apaga sola a los pocos minutos de trabajo."
+                    </p>
+
+                    <div class="flex items-center justify-between text-xs text-slate-500 pt-1 border-t border-slate-100">
+                        <span class="truncate"><i class="fa-solid fa-door-open text-slate-400 mr-1"></i> Amb. 204 (ADSO)</span>
+                        <span class="font-medium text-slate-700"><i class="fa-solid fa-user-tie text-slate-400 mr-1"></i> Inst. Pérez</span>
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="abrirModalGestion('SENA-COMP-202403', 'Daño en Equipos', 'La pantalla parpadea constantemente al encender y se apaga sola a los pocos minutos de trabajo.', 'Ambiente 204', 'Carlos Pérez', 'Pendiente')"
+                            class="w-full bg-sena-azul hover:bg-slate-900 text-white font-semibold py-2 px-3 rounded-xl text-xs transition flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-gear"></i> Gestionar Novedad
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tarjeta Novedad 2 -->
+                <div class="bg-sena-blanco p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3 hover:border-amber-400 transition">
+                    <div class="flex justify-between items-start">
+                        <span class="bg-purple-100 text-purple-700 text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                            <i class="fa-solid fa-barcode"></i> Elemento Sin Placa
+                        </span>
+                        <span class="text-[10px] font-medium text-slate-400">Hace 5 horas</span>
+                    </div>
+
+                    <div>
+                        <h5 class="font-bold text-sena-texto text-sm">Silla Ergonómica Malla Negra</h5>
+                        <p class="text-xs font-mono text-slate-500 mt-0.5">Placa: <span class="text-sena-naranja font-bold">Sin Rotular</span></p>
+                    </div>
+
+                    <p class="text-xs text-slate-600 line-clamp-2 bg-sena-gris p-2.5 rounded-lg border border-slate-100">
+                        "Se ingresó una silla nueva de reemplazo pero carece del código de barras institucional de almacén."
+                    </p>
+
+                    <div class="flex items-center justify-between text-xs text-slate-500 pt-1 border-t border-slate-100">
+                        <span class="truncate"><i class="fa-solid fa-door-open text-slate-400 mr-1"></i> Aula 107</span>
+                        <span class="font-medium text-slate-700"><i class="fa-solid fa-user-tie text-slate-400 mr-1"></i> Inst. Gómez</span>
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="abrirModalGestion('ID-TEMP-88', 'Elemento Sin Placa', 'Se ingresó una silla nueva de reemplazo pero carece del código de barras institucional de almacén.', 'Aula 107', 'Ana Gómez', 'Pendiente')"
+                            class="w-full bg-sena-azul hover:bg-slate-900 text-white font-semibold py-2 px-3 rounded-xl text-xs transition flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-gear"></i> Rotular / Gestionar
+                        </button>
+                    </div>
+                </div>
             </div>
+
+            <!-- COLUMNA 2: EN REVISIÓN -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between bg-blue-500/10 p-3 rounded-xl border border-blue-200">
+                    <span class="font-bold text-blue-800 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-wrench text-blue-600"></i> En Proceso / Mantenimiento
+                    </span>
+                    <span class="bg-blue-600 text-white text-xs font-bold px-2.5 py-0.5 rounded-full">2</span>
+                </div>
+
+                <!-- Tarjeta Novedad En Revisión -->
+                <div class="bg-sena-blanco p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3 hover:border-blue-400 transition">
+                    <div class="flex justify-between items-start">
+                        <span class="bg-amber-100 text-amber-800 text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                            <i class="fa-solid fa-box-open"></i> Elemento Faltante
+                        </span>
+                        <span class="text-[10px] font-medium text-slate-400">Ayer</span>
+                    </div>
+
+                    <div>
+                        <h5 class="font-bold text-sena-texto text-sm">Mouse Óptico USB HP</h5>
+                        <p class="text-xs font-mono text-slate-500 mt-0.5">Placa: <span class="bg-sena-gris px-1.5 py-0.5 rounded border border-slate-200 font-bold text-sena-texto">SENA-MOU-202412</span></p>
+                    </div>
+
+                    <p class="text-xs text-slate-600 line-clamp-2 bg-sena-gris p-2.5 rounded-lg border border-slate-100">
+                        "Falta el mouse en la mesa #12. Revisando cámaras y bitácora con aprendiz líder."
+                    </p>
+
+                    <div class="flex items-center justify-between text-xs text-slate-500 pt-1 border-t border-slate-100">
+                        <span class="truncate"><i class="fa-solid fa-door-open text-slate-400 mr-1"></i> Amb. 204</span>
+                        <span class="font-medium text-slate-700"><i class="fa-solid fa-user-gear text-slate-400 mr-1"></i> Técnico Almacén</span>
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="abrirModalGestion('SENA-MOU-202412', 'Elemento Faltante', 'Falta el mouse en la mesa #12. Revisando cámaras y bitácora con aprendiz líder.', 'Ambiente 204', 'Carlos Pérez', 'En Revisión')"
+                            class="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-semibold py-2 px-3 rounded-xl text-xs transition flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-arrows-rotate"></i> Actualizar Estado
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMNA 3: RESUELTOS -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between bg-sena-verde/10 p-3 rounded-xl border border-sena-verde/20">
+                    <span class="font-bold text-sena-verde-oscuro text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-sena-verde"></i> Novedades Resueltas
+                    </span>
+                    <span class="bg-sena-verde text-white text-xs font-bold px-2.5 py-0.5 rounded-full">12</span>
+                </div>
+
+                <!-- Tarjeta Resuelta -->
+                <div class="bg-sena-blanco p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3 opacity-90 hover:opacity-100 transition">
+                    <div class="flex justify-between items-start">
+                        <span class="bg-sena-verde/10 text-sena-verde-oscuro text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 border border-sena-verde/20">
+                            <i class="fa-solid fa-check"></i> Resuelto / Reparado
+                        </span>
+                        <span class="text-[10px] font-medium text-slate-400">18 Sep 2026</span>
+                    </div>
+
+                    <div>
+                        <h5 class="font-bold text-sena-texto text-sm">Video Proyector Epson</h5>
+                        <p class="text-xs font-mono text-slate-500 mt-0.5">Placa: <span class="bg-sena-gris px-1.5 py-0.5 rounded border border-slate-200 font-bold text-sena-texto">SENA-PROY-99201</span></p>
+                    </div>
+
+                    <p class="text-xs text-slate-600 line-clamp-2 bg-sena-gris p-2.5 rounded-lg border border-slate-100">
+                        "Se realizó reemplazo de lámpara HDMI y limpieza general de filtros de aire."
+                    </p>
+
+                    <div class="flex items-center justify-between text-xs text-slate-500 pt-1 border-t border-slate-100">
+                        <span class="truncate"><i class="fa-solid fa-door-open text-slate-400 mr-1"></i> Aula 107</span>
+                        <span class="font-bold text-sena-verde-oscuro"><i class="fa-solid fa-circle-check mr-1"></i> Reincorporado</span>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </main>
 
-    <!-- SCRIPT JAVASCRIPT DINÁMICO -->
-    <script>
-        // 1. BASE DE DATOS SIMULADA SEGÚN CATEGORÍA
-        const inventarios = {
-            computadores: {
-                nombre: "Computadores HP",
-                items: Array.from({ length: 25 }, (_, i) => ({
-                    item: `#${String(i + 1).padStart(2, '0')}`,
-                    placa: `SENA-COMP-${202401 + i}`,
-                    modelo: "Computador All-in-One HP ProOne 440 G6",
-                    operativo: i !== 2, // Simulamos novedad en el #3
-                    detalleNovedad: i === 2 ? "Pantalla parpadea" : ""
-                }))
-            },
-            proyector: {
-                nombre: "Proyectores Epson",
-                items: [
-                    { item: "#01", placa: "SENA-PROY-99201", modelo: "Video Proyector Epson PowerLite 119W", operativo: true, detalleNovedad: "" }
-                ]
-            },
-            sillas: {
-                nombre: "Sillas Ergonómicas",
-                items: Array.from({ length: 25 }, (_, i) => ({
-                    item: `#${String(i + 1).padStart(2, '0')}`,
-                    placa: `SENA-SIL-${202401 + i}`,
-                    modelo: "Silla Ergonómica Ejecutiva Malla Negra",
-                    operativo: i !== 4, // Simulamos novedad en la #5
-                    detalleNovedad: i === 4 ? "Rueda izquierda rota" : ""
-                }))
-            },
-            mesas: {
-                nombre: "Mesas de Trabajo",
-                items: Array.from({ length: 13 }, (_, i) => ({
-                    item: `#${String(i + 1).padStart(2, '0')}`,
-                    placa: `SENA-MES-${202401 + i}`,
-                    modelo: "Mesa Modular Estructura Metálica",
-                    operativo: true,
-                    detalleNovedad: ""
-                }))
-            },
-            teclados: {
-                nombre: "Teclados USB",
-                items: Array.from({ length: 25 }, (_, i) => ({
-                    item: `#${String(i + 1).padStart(2, '0')}`,
-                    placa: `SENA-TEC-${202401 + i}`,
-                    modelo: "Teclado USB HP K1500",
-                    operativo: true,
-                    detalleNovedad: ""
-                }))
-            },
-            mouses: {
-                nombre: "Mouses Ópticos",
-                items: Array.from({ length: 25 }, (_, i) => ({
-                    item: `#${String(i + 1).padStart(2, '0')}`,
-                    placa: `SENA-MOU-${202401 + i}`,
-                    modelo: "Mouse Óptico USB HP",
-                    operativo: true,
-                    detalleNovedad: ""
-                }))
-            }
-        };
-
-        let itemsActuales = [];
-
-        // 2. OBTENER EL PARÁMETRO 'categoria' DE LA URL
-        function obtenerCategoriaURL() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get('categoria') || 'sillas'; // 'sillas' por defecto si no hay parámetro
-        }
-
-        // 3. RENDERIZAR INVENTARIO (Tarjeta para móviles / Tabla para escritorio)
-        function renderizarTabla(items) {
-            const contenedor = document.getElementById('contenedorVista');
-            contenedor.innerHTML = '';
-
-            if (items.length === 0) {
-                contenedor.innerHTML = `
-            <div class="bg-white rounded-2xl p-8 text-center text-slate-400 border border-slate-200">
-                <i class="fa-solid fa-folder-open text-3xl mb-2 block"></i>
-                No se encontraron elementos con ese criterio de búsqueda.
-            </div>
-        `;
-                return;
-            }
-
-            // ----------------------------------------------------
-            // VISTA MÓVIL: Layout de Tarjetas (Se muestra en < 768px)
-            // ----------------------------------------------------
-            const vistaMobile = document.createElement('div');
-            vistaMobile.className = 'grid grid-cols-1 gap-3 md:hidden';
-
-            items.forEach(el => {
-                const tarjeta = document.createElement('div');
-                tarjeta.className = `bg-white p-4 rounded-2xl border shadow-sm space-y-3 ${!el.operativo ? 'border-red-200 bg-red-50/20' : 'border-slate-200'
-                    }`;
-
-                tarjeta.innerHTML = `
-            <!-- Encabezado de la Tarjeta: Placa y Estado -->
-            <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-bold text-slate-400">${el.item}</span>
-                    <span class="font-mono font-bold text-xs bg-slate-100 px-2 py-1 rounded border border-slate-200 text-slate-800">
-                        ${el.placa}
-                    </span>
+    <!-- MODAL EMERGENTE: GESTIÓN DE LA NOVEDAD -->
+    <div id="modalGestion" class="hidden fixed inset-0 bg-sena-azul/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-sena-blanco rounded-2xl shadow-xl w-full max-w-xl p-6 space-y-5">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <div>
+                    <h3 class="font-bold text-sena-azul text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-sena-verde"></i> Detalle y Solución de Novedad
+                    </h3>
+                    <p id="modalSubtitulo" class="text-xs text-slate-400">Placa: SENA-COMP-202403</p>
                 </div>
-                ${el.operativo
-                        ? `<span class="bg-emerald-100 text-emerald-700 text-[11px] px-2.5 py-0.5 rounded-full font-medium inline-flex items-center gap-1">
-                        <i class="fa-solid fa-circle-check text-[9px]"></i> Operativo
-                       </span>`
-                        : `<span class="bg-red-100 text-red-700 text-[11px] px-2.5 py-0.5 rounded-full font-medium inline-flex items-center gap-1">
-                        <i class="fa-solid fa-circle-xmark text-[9px]"></i> Novedad
-                       </span>`
-                    }
+                <button onclick="document.getElementById('modalGestion').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
 
-            <!-- Información del elemento -->
+            <!-- Información detallada -->
+            <div class="grid grid-cols-2 gap-3 text-xs bg-sena-gris p-3 rounded-xl border border-slate-200">
+                <div>
+                    <span class="text-slate-400 block font-bold uppercase text-[10px]">Tipo Reporte</span>
+                    <span id="modalTipo" class="font-semibold text-sena-texto">Daño en Equipos</span>
+                </div>
+                <div>
+                    <span class="text-slate-400 block font-bold uppercase text-[10px]">Ubicación</span>
+                    <span id="modalUbicacion" class="font-semibold text-sena-texto">Ambiente 204</span>
+                </div>
+                <div>
+                    <span class="text-slate-400 block font-bold uppercase text-[10px]">Reportado Por</span>
+                    <span id="modalReportador" class="font-semibold text-sena-texto">Carlos Pérez</span>
+                </div>
+                <div>
+                    <span class="text-slate-400 block font-bold uppercase text-[10px]">Estado Actual</span>
+                    <span id="modalEstadoActual" class="font-semibold text-amber-600">Pendiente</span>
+                </div>
+            </div>
+
             <div>
-                <p class="text-sm font-semibold text-slate-800">${el.modelo}</p>
-                ${!el.operativo ? `<p class="text-xs text-red-600 mt-1 font-medium"><i class="fa-solid fa-triangle-exclamation mr-1"></i> ${el.detalleNovedad}</p>` : ''}
+                <label class="block text-xs font-bold text-sena-texto uppercase mb-1">Descripción del problema</label>
+                <p id="modalDescripcion" class="text-xs text-sena-texto bg-sena-blanco p-3 rounded-xl border border-slate-200 italic">
+                    "..."
+                </p>
             </div>
 
-            <!-- Botón de acción touch (100% de ancho) -->
+            <!-- Vista Previa de Evidencia / Foto -->
             <div>
-                ${el.operativo
-                        ? `<button class="w-full bg-amber-50 hover:bg-amber-100 text-amber-600 font-semibold py-2.5 px-4 rounded-xl text-xs transition flex items-center justify-center gap-2 border border-amber-200/60 active:scale-[0.98]">
-                        <i class="fa-solid fa-triangle-exclamation"></i> Reportar Novedad
-                       </button>`
-                        : `<button class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 px-4 rounded-xl text-xs transition flex items-center justify-center gap-2 active:scale-[0.98]">
-                        <i class="fa-solid fa-eye"></i> Ver Detalle Novedad
-                       </button>`
-                    }
+                <label class="block text-xs font-bold text-sena-texto uppercase mb-1">Evidencia Fotográfica Adjunta</label>
+                <div class="relative bg-sena-gris rounded-xl border border-slate-200 h-32 flex items-center justify-center overflow-hidden group">
+                    <div class="text-center text-slate-400 space-y-1">
+                        <i class="fa-solid fa-image text-2xl"></i>
+                        <span class="block text-xs font-medium">Foto_evidencia_novedad_204.png</span>
+                    </div>
+                    <button class="absolute inset-0 bg-sena-azul/40 text-sena-blanco font-semibold text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                        <i class="fa-solid fa-magnifying-glass-plus mr-1"></i> Ampliar Imagen
+                    </button>
+                </div>
             </div>
-        `;
-                vistaMobile.appendChild(tarjeta);
-            });
 
-            // ----------------------------------------------------
-            // VISTA ESCRITORIO: Tabla tradicional (Se muestra en >= 768px)
-            // ----------------------------------------------------
-            const vistaDesktop = document.createElement('div');
-            vistaDesktop.className = 'hidden md:block bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden';
+            <!-- Formulario de cambio de estado -->
+            <form class="space-y-4 pt-2 border-t border-slate-100">
+                <div>
+                    <label class="block text-xs font-bold text-sena-texto uppercase mb-1">Cambiar Estado de Gestión</label>
+                    <select class="w-full px-4 py-2 border border-slate-300 bg-sena-blanco rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sena-verde">
+                        <option value="Pendiente">Pendiente (Sin intervenir)</option>
+                        <option value="En_Revision" selected>En Revisión / Mantenimiento</option>
+                        <option value="Resuelto">Resuelto (Reparado / Repuesto)</option>
+                    </select>
+                </div>
 
-            let htmlTabla = `
-        <table class="w-full text-left text-sm">
-            <thead class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
-                <tr>
-                    <th class="p-4">Item</th>
-                    <th class="p-4">N° de Placa SENA</th>
-                    <th class="p-4">Elemento / Modelo</th>
-                    <th class="p-4">Estado Actual</th>
-                    <th class="p-4 text-center">Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100 text-slate-700">
-    `;
+                <div>
+                    <label class="block text-xs font-bold text-sena-texto uppercase mb-1">Acción o Solución Aplicada</label>
+                    <textarea rows="2" placeholder="Escriba las observaciones del trabajo realizado en almacén..."
+                        class="w-full px-4 py-2 border border-slate-300 bg-sena-blanco rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sena-verde"></textarea>
+                </div>
 
-            items.forEach(el => {
-                htmlTabla += `
-            <tr class="hover:bg-slate-50/80 transition ${!el.operativo ? 'bg-red-50/30' : ''}">
-                <td class="p-4 font-semibold text-slate-400">${el.item}</td>
-                <td class="p-4 font-mono font-bold text-slate-800">
-                    <span class="bg-slate-100 px-2 py-1 rounded border border-slate-200">${el.placa}</span>
-                </td>
-                <td class="p-4">${el.modelo}</td>
-                <td class="p-4">
-                    ${el.operativo
-                        ? `<span class="bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-full font-medium inline-flex items-center gap-1">
-                            <i class="fa-solid fa-circle-check text-[10px]"></i> Operativo
-                           </span>`
-                        : `<span class="bg-red-100 text-red-700 text-xs px-2.5 py-1 rounded-full font-medium inline-flex items-center gap-1">
-                            <i class="fa-solid fa-circle-xmark text-[10px]"></i> Con Novedad (${el.detalleNovedad})
-                           </span>`
-                    }
-                </td>
-                <td class="p-4 text-center">
-                    ${el.operativo
-                        ? `<button class="text-amber-500 hover:text-amber-600 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-lg text-xs font-medium transition inline-flex items-center gap-1">
-                            <i class="fa-solid fa-triangle-exclamation"></i> Reportar Novedad
-                           </button>`
-                        : `<button class="text-slate-600 hover:text-slate-800 bg-slate-100 px-3 py-1.5 rounded-lg text-xs font-medium transition inline-flex items-center gap-1">
-                            <i class="fa-solid fa-eye"></i> Ver Novedad
-                           </button>`
-                    }
-                </td>
-            </tr>
-        `;
-            });
+                <div class="flex gap-3">
+                    <button type="button" onclick="document.getElementById('modalGestion').classList.add('hidden')"
+                        class="flex-1 bg-sena-gris hover:bg-slate-200 text-sena-texto font-semibold py-2.5 rounded-xl text-sm transition">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                        class="flex-1 bg-sena-verde hover:bg-sena-verde-oscuro text-sena-blanco font-semibold py-2.5 rounded-xl text-sm shadow-sm transition">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-            htmlTabla += `
-            </tbody>
-        </table>
-    `;
-
-            vistaDesktop.innerHTML = htmlTabla;
-
-            // Agregar ambas vistas al DOM
-            contenedor.appendChild(vistaMobile);
-            contenedor.appendChild(vistaDesktop);
+    <!-- SCRIPT JS PARA INTERACCIÓN DEL MODAL -->
+    <script>
+        function abrirModalGestion(placa, tipo, desc, ubicacion, reportador, estado) {
+            document.getElementById('modalSubtitulo').innerText = `Placa / Identificador: ${placa}`;
+            document.getElementById('modalTipo').innerText = tipo;
+            document.getElementById('modalDescripcion').innerText = `"${desc}"`;
+            document.getElementById('modalUbicacion').innerText = ubicacion;
+            document.getElementById('modalReportador').innerText = reportador;
+            document.getElementById('modalEstadoActual').innerText = estado;
+            
+            document.getElementById('modalGestion').classList.remove('hidden');
         }
-
-        // 4. INICIALIZACIÓN
-        document.addEventListener('DOMContentLoaded', () => {
-            const cat = obtenerCategoriaURL();
-            const dataCategoria = inventarios[cat] || inventarios['sillas'];
-
-            // Actualizar encabezados
-            document.getElementById('tituloCategoria').innerText = `Listado de ${dataCategoria.nombre}`;
-            document.getElementById('badgeTotal').innerText = `Total: ${dataCategoria.items.length} Elementos`;
-
-            itemsActuales = dataCategoria.items;
-            renderizarTabla(itemsActuales);
-
-            // Buscador dinámico en tiempo real
-            document.getElementById('inputBuscador').addEventListener('input', (e) => {
-                const busqueda = e.target.value.toLowerCase();
-                const filtrados = itemsActuales.filter(item =>
-                    item.placa.toLowerCase().includes(busqueda) ||
-                    item.modelo.toLowerCase().includes(busqueda)
-                );
-                renderizarTabla(filtrados);
-            });
-        });
     </script>
 </body>
 
